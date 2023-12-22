@@ -60,12 +60,9 @@ app.on('ready', () => {
 
 	ipcMain.handle('getAudioDevices', () => {
 		const pwsh = path.resolve(app.getAppPath(), './resources/lib/AudioDevices.ps1')
-		return new Promise((r) => {
-			// const devices = cp.spawnSync('powershell.exe', [pwsh])
-			// r(JSON.parse(new TextDecoder().decode(devices.stdout)))
-			cp.exec(pwsh, { shell: 'powershell.exe' }, (_, stdout) => {
-				r(JSON.parse(stdout))
-			})
+		return new Promise((resolve) => {
+			const devices = cp.spawnSync('powershell.exe', ['-ExecutionPolicy', 'Bypass', '-File', pwsh])
+			resolve(JSON.parse(new TextDecoder().decode(devices.stdout)))
 		})
 	})
 
