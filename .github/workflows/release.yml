@@ -1,0 +1,27 @@
+name: Create Release
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 20.x
+
+    - name: Build
+      run: |
+        npm install
+        npm run make
+
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: out/make/**/*.exe
+        generate_release_notes: true
+
+        
